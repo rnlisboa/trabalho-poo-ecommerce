@@ -1,8 +1,8 @@
-from .models. import  
+from pedido import Pedido
 
-class NProduto:
-    def __init__():
-        produtos = []
+class NPedido:
+    def __init__(self):
+        self.pedidos = []
     
     def listar():
         # retornar a lista
@@ -23,3 +23,4 @@ class NProduto:
     def excluir():
         # remover da lista
         pass
+

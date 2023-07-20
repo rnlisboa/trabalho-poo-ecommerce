@@ -1,8 +1,8 @@
-from .models. import  
+from produtoItem import ProdutoItem
 
-class NCategoria:
+class NPedidoItem:
     def __init__():
-        categorias = []
+        pedido_item = []
     
     def listar():
         # retornar a lista

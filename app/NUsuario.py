@@ -1,9 +1,9 @@
-from .models. import  
+from usuario import Usuario
 
-class NCliente:
-    def __init__():
-        clientes = []
-    
+class NUsuario:
+    def __init__(self):
+        self.usuarios = []
+
     def listar():
         # retornar a lista
         pass 
@@ -23,3 +23,5 @@ class NCliente:
     def excluir():
         # remover da lista
         pass
+
+

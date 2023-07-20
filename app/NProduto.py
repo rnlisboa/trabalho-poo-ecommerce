@@ -1,8 +1,8 @@
-from .models. import  
+from produto import Produto  
 
-class NUsuario:
+class NProduto:
     def __init__():
-        usuarios = []
+        produtos = []
     
     def listar():
         # retornar a lista

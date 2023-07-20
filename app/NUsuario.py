@@ -1,3 +1,4 @@
+import json
 from usuario import Usuario
 
 class NUsuario:
@@ -26,6 +27,10 @@ class NUsuario:
             id+=1
         usuario = Usuario(id, nome, email, senha)
         self._usuarios.append(usuario)
+
+        self.ler_arquivo('usuarios.json')
+
+        #self.grava_arquivo(usuario, 'usuarios.json')
         return {"message": "Usuário cadastrado com sucesso!", "status": "201"}
     
     def atualizar(self):
@@ -35,6 +40,25 @@ class NUsuario:
     def excluir(self):
         # remover da lista
         pass
+
+    @staticmethod
+    def grava_arquivo(dado: Usuario, arquivo: str):
+        dictionary = {
+            "id": dado.get_id(),
+            "nome": dado.get_nome(),
+            "email": dado.get_email(),
+            "senha": dado.get_senha(),
+            "is_admin": dado.get_is_admin()
+        }
+        objeto = json.dumps(dictionary, indent = 4)
+        with open(arquivo, 'a') as f:
+            f.write(objeto)
+
+    @staticmethod
+    def ler_arquivo(arquivo):
+        with open(arquivo, 'r') as f:
+            f.read()
+
 
 while True:
     nome = input("nome: ")

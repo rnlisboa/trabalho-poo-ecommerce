@@ -30,7 +30,7 @@ class Usuario:
     def set_senha(self, value):
         self._senha = value
 
-    def is_admin(self):
+    def get_is_admin(self):
         return self._is_admin
 
     def set_admin(self, value):

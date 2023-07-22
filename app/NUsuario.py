@@ -72,7 +72,6 @@ class NUsuario:
         novos_usuarios = []
         for usuario_a_atualizar in list_usuarios:
             if usuario_a_atualizar['id'] == int(id):
-                print(usuario_a_atualizar['id'])
                 list_usuarios.remove(usuario_a_atualizar)
                 break
        
@@ -80,7 +79,6 @@ class NUsuario:
             u = Usuario(i['id'], i['nome'], i['email'], i['senha'])
             novos_usuarios.append(u)
         novos_usuarios.append(usuario_atualizado)
-        print(novos_usuarios)
         self.grava_arquivo(novos_usuarios, 'usuarios.json')
         return {"message": "Usuário atualizado com sucesso!", "status": "200"}
 

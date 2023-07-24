@@ -1,8 +1,8 @@
 from produto import Produto  
 
 class NProduto:
-    def __init__():
-        produtos = []
+    def __init__(self):
+        self._produtos = []
     
     def listar():
         # retornar a lista

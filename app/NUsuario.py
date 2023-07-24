@@ -41,7 +41,7 @@ class NUsuario:
         novos_usuarios.append(usuario)
 
         self.grava_arquivo(novos_usuarios, 'usuarios.json')
-        return {"message": "Usuário cadastrado com sucesso!", "status": "201"}
+        return {"data":{"message": "Usuário cadastrado com sucesso!", "usuario": usuario}, "status": "201"}
     
     def atualizar(self, id, nome, email, senha):
         usuario = self.ver_usuario(id)['data']
@@ -132,3 +132,4 @@ class NUsuario:
             return usuarios
         except:
             return {}
+

@@ -41,12 +41,50 @@ class NCliente:
         
     
     def atualizar(self, id, nome, email, senha, cpf):
-        resposta_usuario = NUsuario().cadastrar(id, nome, email, senha)
-        return resposta_usuario
-    
+        clientes = self.listar()
+        clientes_id = clientes.keys()
+        if not id in clientes_id:
+            return "Você não possui conta cliente."
+        
+        resposta_usuario = NUsuario().atualizar(id, nome, email, senha)
+        if resposta_usuario["status"] == 400:
+            return resposta_usuario["message"]
+
+        lista_clientes = list(clientes.values())
+        for cliente in lista_clientes:
+            if cliente['id'] == int(id):
+                cliente['cpf'] = cpf
+        for i in list_usuarios:
+            c = Cliente(i['id'], i['usuario'], i['cpf'])
+        
+        self.grava_arquivo(novos_clientes, 'clientes.json')
+        return "Cliente atualizado com sucesso!"
+
     def excluir(self, id):
-        resposta_usuario = NUsuario().cadastrar(id)
-        return resposta_usuario
+        clientes = self.listar()
+        clientes_id = clientes.keys()
+        if not id in clientes_id:
+            return "Você não possui conta cliente."
+        
+        try:
+            for cliente_id in clientes:
+                if clientes[cliente_id]['id'] == int(id):
+                    resposta_usuario = NUsuario().excluir(clientes[cliente_id]['usuario'])
+            lista_clientes = list(self.listar().values())
+            
+            novos_clientes = [] 
+            for cliente_a_remover in lista_clientes:
+                if cliente_a_remover['id'] == int(id):
+                    lista_clientes.remove(cliente_a_remover)
+                    break
+            for i in lista_clientes:
+                c = Cliente(i['id'], i['usuario'], i['cpf'])
+                novos_clientes.append(c)
+            self.grava_arquivo(novos_clientes, 'clientes.json')
+            
+            return "Cliente removido com sucesso!"
+        except: return "Erro ao remover cliente."    
+        
     
     @staticmethod
     def grava_arquivo(clientes: list, arquivo: str):
@@ -79,48 +117,4 @@ class NCliente:
             return clientes
         except:
             return {}
-n_cliente = NCliente().ver(2)
-print(n_cliente)
-# while True:
-#     print("1 - Listar clientes")
-#     print("2 - Ver um cliente")
-#     print("3 - Cadastrar cliente")
-#     print("4 - Remover cliente")
-#     print("5 - Atualizar cliente")
-#     print("6 - Sair")
-#     opt = input("O que deseja fazer? ")
-    
-#     if opt == '1':
-#         clientes = n_cliente.listar()
-#         for cliente in clientes:
-#             print(cliente)
-#     elif opt == '2':
-#         id = int(input("ID do cliente: "))
-#         cliente = n_cliente.ver(id)
-#         if cliente:
-#             print(cliente)
-#         else:
-#             print("Cliente não encontrado.")
-#     elif opt == '3':
-#         nome = input("Nome: ")
-#         email = input("Email: ")
-#         senha = input("Senha: ")
-#         cpf = input("CPF: ")
-#         resposta = n_cliente.cadastrar(nome, email, senha, cpf)
-#         print(resposta)
-#     elif opt == '4':
-#         id = int(input("ID do cliente: "))
-#         resposta = n_cliente.excluir(id)
-#         print(resposta)
-#     elif opt == '5':
-#         id = int(input("ID do cliente: "))
-#         nome = input("Nome: ")
-#         email = input("Email: ")
-#         senha = input("Senha: ")
-#         cpf = input("CPF: ")
-#         resposta = n_cliente.atualizar(id, nome, email, senha, cpf)
-#         print(resposta)
-#     elif opt == '6':
-#         break
-#     else:
-#         print("Opção inválida. Tente novamente.")
+

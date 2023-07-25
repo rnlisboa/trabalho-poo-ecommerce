@@ -16,9 +16,9 @@ class NUsuario:
         usuario = [user for user in list_usuarios if user['id'] == int(id)]
         try:
             user = usuario[0]
-            return {"data":user, "status": "400"}
+            return {"data":user}
         except:
-            return {"message":"Usuário não encontrado.", "status": "400"}
+            return "Usuário não encontrado."
     
     def cadastrar(self, nome, email, senha):
         usuarios = self.ler_arquivo('usuarios.json')
@@ -49,21 +49,21 @@ class NUsuario:
         list_usuarios = list(usuarios.values())
        
         if senha != '':
-            if len(senha) < 8: return "Mínimo de 8 para senha"
+            if len(senha) < 8: return {"message":"Mínimo de 8 para senha", "status": 400}
         if senha == '':
             senha = usuario['senha'] 
 
         if email != '':
-            if '@' not in email: return "Formato de email inválido."
+            if '@' not in email: return {"message":"Formato de email inválido.", "status": 400}
             email_ja_existe = [user for user in list_usuarios if user['email'] == email]
             if len(email_ja_existe) > 0: 
-                return "Email já cadastrado."
+                return {"message":"Email já cadastrado.", "status": 400}
         if email == '':
             email = usuario['email']
         
         if nome != '':
             if len(nome) < 3:
-                return "Mínimo de 3 caracteres para nome"
+                return {"message":"Mínimo de 3 caracteres para nome", "status": 400}
         if nome == '':
             nome = usuario['nome']
         
@@ -80,7 +80,7 @@ class NUsuario:
             novos_usuarios.append(u)
         novos_usuarios.append(usuario_atualizado)
         self.grava_arquivo(novos_usuarios, 'usuarios.json')
-        return {"message": "Usuário atualizado com sucesso!", "usuario_id": usuario_atualizado.get_id}
+        return {"message": "Usuário atualizado com sucesso!", "usuario_id": usuario_atualizado.get_id(), "status": 200}
 
     def excluir(self, id):
         usuarios = self.listar()
@@ -97,7 +97,7 @@ class NUsuario:
 
         
         self.grava_arquivo(novos_usuarios, 'usuarios.json')
-        return {"message": "Usuário removido com sucesso!", "status": "200"}
+        return "Usuário removido com sucesso!"
     
     @staticmethod
     def grava_arquivo(usuarios: list, arquivo: str):

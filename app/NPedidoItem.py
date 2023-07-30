@@ -1,25 +1,110 @@
-from produtoItem import ProdutoItem
-
+import os, json
+from pedidoItem import PedidoItem
+import NPedido
+import NProduto
 class NPedidoItem:
-    def __init__():
+    def __init__(self):
         pedido_item = []
     
-    def listar():
-        # retornar a lista
-        pass 
+    def listar(self):
+        return self.ler_arquivo('pedidoItem.json')
     
-    def ver():
-        # filtrar pelo id
-        pass
+    def ver(self):
+        pedidoItems = self.listar()
+        for pedidoItem_id in pedidoItems:
+            if pedidoItem_id == id:
+                return pedidoItems[pedidoItem_id]
     
-    def cadastrar():
-        # adicionar na lista
-        pass
+    def cadastrar(self, produto_id, pedido_id, quantidade):
+        pedidos_item = self.listar()
+        if pedido_id not in NPedido().listar().keys(): return "Pedido não encontrado"
+        if produto_id not in NProduto().listar().keys(): return "Produto não encontrado"
+        if quantidade < 0: return "Quantidade inválida."
+        preco_total = NProduto().ver(produto_id) * quantidade
+
+
+        id = len(pedidos_item) + 1
+        novo_pedido = Pedido(id, produto_id, pedido_id, quantidade, preco_total)
+        nova_lista = []
+        for pedido_item_id in ppedido_items:
+            p = PedidoItem(
+            pedido_items[pedido_item_id]['id'],
+            pedido_items[pedido_item_id]['produto_id'],
+            pedido_items[pedido_item_id]['pedido_id'],
+            pedido_items[pedido_item_id]['quantidade'],
+            pedido_items[pedido_item_id]['preco_total']
+            )
+            nova_lista.append(p)
+        nova_lista.append(novo_produto)
+
+        self.grava_arquivo(nova_lista, 'pedidoItem.json')
+        return "Item cadastrado com sucesso!"
     
-    def atualizar():
-        # modificar o objeto
-        pass
+    def atualizar(self, id, quantidade):
+        items = self.listar()
+        item = self.ver(id)
+
+        if not item: return "Item não encontrado"
+
+        if quantidade < 0: return "Quantidade inválida."
+        items[id]['quantidade'] = quantidade
+        nova_lista = []
+        for pedido_item_id in pedido_items:
+            p = PedidoItem(
+            pedido_items[pedido_item_id]['id'],
+            pedido_items[pedido_item_id]['produto_id'],
+            pedido_items[pedido_item_id]['pedido_id'],
+            pedido_items[pedido_item_id]['quantidade'],
+            pedido_items[pedido_item_id]['preco_total']
+            )
+            nova_lista.append(p)
+        self.grava_arquivo(nova_lista, 'pedidoItem.json')
+        return "Item cadastrado com sucesso!"
     
-    def excluir():
-        # remover da lista
-        pass
+    def excluir(self, id):
+        items = self.listar()
+        del items[id]
+        for pedido_item_id in pedido_items:
+            p = PedidoItem(
+            pedido_items[pedido_item_id]['id'],
+            pedido_items[pedido_item_id]['produto_id'],
+            pedido_items[pedido_item_id]['pedido_id'],
+            pedido_items[pedido_item_id]['quantidade'],
+            pedido_items[pedido_item_id]['preco_total']
+            )
+            nova_lista.append(p)
+        self.grava_arquivo(nova_lista, 'pedidoItem.json')
+        return "Item removido com sucesso!"
+    @staticmethod
+    def grava_arquivo(pedidos: list, arquivo: str):
+        diretorio_atual = os.path.dirname(os.path.realpath(__file__))
+        arquivo_nome = diretorio_atual +  f'\\base_dados\\{arquivo}' 
+        dict_pedidos = {}
+        for pedido in pedidos:
+            key = pedido.get_id()
+            dict_pedidos[key] = {
+                "id": pedido.get_id(),
+                "cliente_id": pedido.get_descricao(),
+                "preco_total": pedido.get_estoque(),
+                "data": pedido.get_preco(),
+                "finalizado": pedido.get_categoria_id()
+            }
+        
+        objeto = json.dumps(dict_pedidos, indent = 4)
+        with open(arquivo_nome, 'w', encoding='utf-8') as f:
+            f.write(objeto)
+
+    @staticmethod
+    def ler_arquivo(arquivo):
+        diretorio_atual = os.path.dirname(os.path.realpath(__file__))
+        arquivo_nome = diretorio_atual +  f'\\base_dados\\{arquivo}'
+        try:
+            with open(arquivo_nome, 'r', encoding='utf-8') as f:
+                lista = f.read()
+                if lista != '':
+                    pedidos = json.loads(lista)
+                else:
+                    pedidos = {}
+            return pedidos
+        except Exception as e:
+            return {}

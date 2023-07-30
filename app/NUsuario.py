@@ -133,3 +133,5 @@ class NUsuario:
         except:
             return {}
 
+
+print(NUsuario().listar())

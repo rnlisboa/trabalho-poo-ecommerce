@@ -1,6 +1,6 @@
 import os, json
 from pedido import Pedido
-import NCliente
+from NCliente import NCliente
 
 class NPedido:
     def __init__(self):
@@ -81,7 +81,7 @@ class NPedido:
         self.grava_arquivo(novos_pedidos, 'pedidos.json')
         return "Pedido fechado com sucesso!"
 
-    def excluir(self):
+    def excluir(self, id):
         pedidos = self.listar()
 
         del pedidos[id]

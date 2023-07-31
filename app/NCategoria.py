@@ -47,14 +47,14 @@ class NCategoria:
         
         nova_lista = []
         for categoria_id in categorias:
-            c = categoria(
+            c = Categoria(
             categorias[categoria_id]['id'],
             categorias[categoria_id]['descricao']
             )
             nova_lista.append(c)
         
         self.grava_arquivo(nova_lista, 'categorias.json')
-        return "Categoria atualizado com sucesso!"
+        return "Categoria atualizada com sucesso!"
     
     def excluir(self):
         categorias = self.listar()
@@ -62,7 +62,7 @@ class NCategoria:
         del categorias[id]
         nova_lista = []
         for categoria_id in categorias:
-            c = categoria(
+            c = Categoria(
             categorias[categoria_id]['id'],
             categorias[categoria_id]['descricao']
             )

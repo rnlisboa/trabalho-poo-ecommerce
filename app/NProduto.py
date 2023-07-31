@@ -1,6 +1,6 @@
 import os, json
 from produto import Produto  
-import NCategoria
+from NCategoria import NCategoria
 
 class NProduto:
     def __init__(self):
@@ -16,7 +16,7 @@ class NProduto:
                 return produtos[produto_id]
         
     
-    def cadastrar(self, descricao: str, estoque: int, preco: float, categoria_id: int):
+    def cadastrar(self, descricao: str, estoque: int, preco: float, categoria_id: str):
         categoria = NCategoria().ver(categoria_id)
         if not categoria: return "Categoria não encontrada"
 
@@ -25,7 +25,7 @@ class NProduto:
         
         produtos = self.listar()
         id = len(produtos) + 1
-        novo_produto = Produto(id, descricao, estoque, preco, int(categoria_id))
+        novo_produto = Produto(id, descricao, estoque, preco, categoria_id)
 
         nova_lista = []
         for produto_id in produtos:
@@ -131,7 +131,3 @@ class NProduto:
             return produtos
         except Exception as e:
             return {}
-
-n_produto = NProduto()
-
-print(n_produto.ver('3'))

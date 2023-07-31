@@ -3,20 +3,20 @@ class Categoria:
         self._id = id
         self._descricao = descricao
 
-    @property
-    def id(self):
+    
+    def get_id(self):
         return self._id
 
-    @id.setter
-    def id(self, value):
+    
+    def set_id(self, value):
         self._id = value
 
-    @property
-    def descricao(self):
+    
+    def get_descricao(self):
         return self._descricao
 
-    @descricao.setter
-    def descricao(self, value):
+    
+    def set_descricao(self, value):
         self._descricao = value
 
     def __str__(self):

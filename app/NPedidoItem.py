@@ -1,7 +1,7 @@
 import os, json
 from pedidoItem import PedidoItem
-import NPedido
-import NProduto
+from NPedido import NPedido
+from NProduto import NProduto
 class NPedidoItem:
     def __init__(self):
         pedido_item = []
@@ -21,7 +21,7 @@ class NPedidoItem:
         if produto_id not in NProduto().listar().keys(): return "Produto não encontrado"
         if quantidade < 0: return "Quantidade inválida."
         preco_total = NProduto().ver(produto_id) * quantidade
-
+        
 
         id = len(pedidos_item) + 1
         novo_pedido = Pedido(id, produto_id, pedido_id, quantidade, preco_total)
@@ -76,21 +76,21 @@ class NPedidoItem:
         self.grava_arquivo(nova_lista, 'pedidoItem.json')
         return "Item removido com sucesso!"
     @staticmethod
-    def grava_arquivo(pedidos: list, arquivo: str):
+    def grava_arquivo(items: list, arquivo: str):
         diretorio_atual = os.path.dirname(os.path.realpath(__file__))
         arquivo_nome = diretorio_atual +  f'\\base_dados\\{arquivo}' 
-        dict_pedidos = {}
-        for pedido in pedidos:
-            key = pedido.get_id()
-            dict_pedidos[key] = {
-                "id": pedido.get_id(),
-                "cliente_id": pedido.get_descricao(),
-                "preco_total": pedido.get_estoque(),
-                "data": pedido.get_preco(),
-                "finalizado": pedido.get_categoria_id()
+        dict_item = {}
+        for item in items: 
+            key = item.get_id()
+            dict_item[key] = {
+                "id": item.get_id(),
+                "produto_id": item.get_produto_id(),
+                "pedido_id": item.get_pedido_id(),
+                "quantidade": item.get_quantidade(),
+                "preco_total": item.get_preco_total()
             }
         
-        objeto = json.dumps(dict_pedidos, indent = 4)
+        objeto = json.dumps(dict_item, indent = 4)
         with open(arquivo_nome, 'w', encoding='utf-8') as f:
             f.write(objeto)
 
@@ -102,9 +102,9 @@ class NPedidoItem:
             with open(arquivo_nome, 'r', encoding='utf-8') as f:
                 lista = f.read()
                 if lista != '':
-                    pedidos = json.loads(lista)
+                    item = json.loads(lista)
                 else:
-                    pedidos = {}
-            return pedidos
+                    item = {}
+            return item
         except Exception as e:
             return {}

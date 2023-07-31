@@ -1,0 +1,9 @@
+{
+    "1": {
+        "id": 1,
+        "produto_id": "6",
+        "pedido_id": 3,
+        "quantidade": 3,
+        "preco_total": 30.0
+    }
+}

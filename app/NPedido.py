@@ -35,7 +35,7 @@ class NPedido:
         nova_lista.append(novo_pedido)
 
         self.grava_arquivo(nova_lista, 'pedidos.json')
-        return "Pedido cadastrado com sucesso!"
+        return {"message":"Pedido cadastrado com sucesso!", "id": novo_pedido.get_id()}
     
     def atualizar(self, pedido_id, preco_total):
         pedidos = self.listar()
@@ -83,7 +83,7 @@ class NPedido:
 
     def excluir(self, id):
         pedidos = self.listar()
-
+        if len(pedidos) == 0: return "Lista vazia."
         del pedidos[id]
         nova_lista = []
         for pedido_id in pedidos:
@@ -108,10 +108,10 @@ class NPedido:
             key = pedido.get_id()
             dict_pedidos[key] = {
                 "id": pedido.get_id(),
-                "cliente_id": pedido.get_descricao(),
-                "preco_total": pedido.get_estoque(),
-                "data": pedido.get_preco(),
-                "finalizado": pedido.get_categoria_id()
+                "cliente_id": pedido.get_cliente_id(),
+                "preco_total": pedido.get_preco_total(),
+                "data": pedido.get_data(),
+                "finalizado": pedido.is_finalizado()
             }
         
         objeto = json.dumps(dict_pedidos, indent = 4)
@@ -132,3 +132,4 @@ class NPedido:
             return pedidos
         except Exception as e:
             return {}
+

@@ -54,7 +54,7 @@ class NProduto:
         if descricao == '': descricao = produto_antigo['descricao']
         if estoque == '': estoque = produto_antigo['estoque']
         if preco == '': preco = produto_antigo['preco']
-        if categoria_id == '': categoria_id = categoria_id['preco']
+        if categoria_id == '': categoria_id = produto_antigo['categoria_id']
 
         if  estoque < 0 or preco < 0.0: return "estoque e preço devem ser maiores que zero"
     

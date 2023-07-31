@@ -1,4 +1,5 @@
 import os, json
+from datetime import datetime
 from NPedido import NPedido
 from NCategoria import NCategoria
 from NPedidoItem import NPedidoItem
@@ -110,11 +111,13 @@ class Ecommerce:
                 """)
                 opcao = self.menu_usuario()
                 try:
-                        num = int(input("Escolha uma ação: ")) 
+                        
                         if opcao == 1:
+                            num = int(input("Escolha uma ação: ")) 
                             if num == 1: self.listar_categorias()
 
                         if opcao == 2:
+                            num = int(input("Escolha uma ação: ")) 
                             if num == 1: self.listar_produtos()
                             if num == 2: self.ver_produtos_categoria()
                             s_n = int(input("Deseja ver detalhes de um produto?  1- SIM | 2- NÃO "))
@@ -125,6 +128,7 @@ class Ecommerce:
                         if opcao == 3: 
                             self.menu_conta()
                             try:
+                                num = int(input("Escolha uma ação: ")) 
                                 opt = int(input("O que deseja fazer? "))
                                 if num == 1: self.atualizar_usuario()
                                 if num == 2: self.remover_conta()
@@ -133,11 +137,14 @@ class Ecommerce:
 
                         if opcao == 4: 
                             self.menu_carrinho()
+                            self.listar_pedidos()
+                            num = int(input("Escolha uma ação: ")) 
                             if num == 1:
-                                self.listar_pedidos()
+                                
                                 opc = self.menu_pedido()
                                 if opc == 1: self.remover_pedido()
                                 if opc == 2: self.realizar_compra()
+                                if opc == 3: self.ver_pedido_items()
 
                         if opcao == 5: 
                             self.sair()
@@ -319,6 +326,9 @@ class Ecommerce:
         |  2- REALIZAR     |
         |      COMPRA      |
         +------------------+
+        |  3- VER          |
+        |    DETALHES      |
+        +------------------+
         """)
         try:
             p_opcoes = int(input("Escolha uma opção: \n"))
@@ -372,14 +382,13 @@ class Ecommerce:
             print('----------------------------')
     
     def ver_produto(self):
-        self.listar_produtos()
-        id_p = int(input("Informe o id do produto: "))
+        id_p = input("Informe o id do produto que deseja ver: ")
         produto = NProduto().ver(id_p)
         if produto:
             print(f"id: {id_p}")
-            print(f"descrição: {produtos['descrição']}")
-            print(f"estoque: {produtos['estoque']}")
-            print(f"preço: {produtos['preco']}")
+            print(f"descrição: {produto['descricao']}")
+            print(f"estoque: {produto['estoque']}")
+            print(f"preço: {produto['preco']}")
         else:
             print("Não encontrado.")
                                 
@@ -426,13 +435,19 @@ class Ecommerce:
     
     def listar_pedidos(self):
         pedidos = NPedido().listar()
-
-        meus = [p for p in pedidos if pedidos[p]['cliente_id'] == self.usuario_id]
-
-        for p in meus:
-            if not meus[p]['finalizado']:
-                print(f"id: {meus[p]['id']} - preço total: {meus[p]['preco_total']} - {meus[p]['data']}")
+        session = self.ler_arquivo('session.json')
+        meus = [p for p in pedidos if pedidos[p]['cliente_id'] == session['client']]
     
+        if len(meus) == 0: 
+            print("Carrinho vazio.")
+        else:
+            for p in meus:
+                pedido = NPedido().ver(p)
+                if not pedido['finalizado']:
+                    print(f"""+------------------------------------------------------------------------------+
+                        | id: {pedido['id']} - preço total: {pedido['preco_total']} - data: {pedido['data']}   |
+                        +------------------------------------------------------------------------------+""")
+        
     def remover_pedido(self):
         id = input("Informe o id: ")
         p = NPedido().excluir(id)
@@ -442,10 +457,27 @@ class Ecommerce:
         pass
     
     def realizar_compra(self):
-        pass
+        id = input("Informe o id: ")
+        p = NPedido().fechar_pedido(id)
+        print(p)
     
     def criar_pedido_items(self):
-        pass
+        data_hora_atual = datetime.now()
+        data = data_hora_atual.strftime("%d/%m/%Y %H:%M")
+        session = self.ler_arquivo('session.json')
+        id_p = input("Informe novamente o id do produto: ")
+        qtd = int(input("Informe a quantidade: "))
+
+        produto = NProduto().ver(id_p)
+        preco_total = produto['preco'] * qtd
+
+        pedido = NPedido().cadastrar(session['client'], preco_total, data)
+   
+        if 'id' in pedido.keys():
+            item = NPedidoItem().cadastrar(id_p, pedido['id'], qtd)
+            print(f"MENSAGEM DE ITEM: {item}")
+        else:
+            print(F"MENSAGEM DE PRODUTO: {pedido}")
     
     def atualizar_pedido_items(self):
         pass
@@ -454,7 +486,15 @@ class Ecommerce:
         pass
     
     def ver_pedido_items(self):
-        pass
+        d = int(input("Informe o id do pedido: "))
+        items = NPedidoItem().listar()
+        meus = [item for item in items if items[item]['pedido_id'] == d]
+        print(meus)
+        for m in meus:
+            p = NProduto().ver(m)
+            print(f"""
+            Produto: {p['descricao']} - Quantidade: {meus[p]['quantidade']} Preço total: {meus[p]['preco_total']}
+            """)
     
     def listar_pedido_items(self):
         pass
@@ -491,11 +531,15 @@ class Ecommerce:
         email = input("Digite o email: ")
         senha = input("Digite a senha: ")
         usuarios = NUsuario().listar()
+        clientes = NCliente().listar()
         user = [u for u in usuarios if usuarios[u]['email'] == email]
+         
         if len(user) > 0:
             u = NUsuario().ver_usuario(user[0])
+            client = [c for c in clientes if clientes[c]['usuario'] == u['data']['id']]
+           
             if email == u['data']['email'] and senha == u['data']['senha']:
-                self.grava_arquivo(u['data']['id'],u['data']['is_admin'])
+                self.grava_arquivo(u['data']['id'],u['data']['is_admin'],client[0])
                 self.usuario_logado = True
                 print("""
                 
@@ -527,10 +571,10 @@ class Ecommerce:
         self.usuario_logado = False
     
     @staticmethod
-    def grava_arquivo(id='', is_admin=''):
+    def grava_arquivo(id='', is_admin='', client=''):
         diretorio_atual = os.path.dirname(os.path.realpath(__file__))
         arquivo_nome = diretorio_atual +  f'\\base_dados\\session.json' 
-        dict_u = {"id": id, "is_admin": is_admin}
+        dict_u = {"id": id, "is_admin": is_admin, "client": client}
         
         objeto = json.dumps(dict_u, indent = 4)
         with open(arquivo_nome, 'w', encoding='utf-8') as f:

@@ -373,13 +373,15 @@ class Ecommerce:
     
     def listar_produtos(self):
         produtos = NProduto().listar()
-        
-        for id_p in produtos:
-            print(f"id: {id_p}")
-            print(f"descrição: {produtos[id_p]['descricao']}")
-            print(f"estoque: {produtos[id_p]['estoque']}")
-            print(f"preço: {produtos[id_p]['preco']}")
-            print('----------------------------')
+        if len(produtos) == 0:
+            print("Sem produtos cadastrados.")
+        else:
+            for id_p in produtos:
+                print(f"id: {id_p}")
+                print(f"descrição: {produtos[id_p]['descricao']}")
+                print(f"estoque: {produtos[id_p]['estoque']}")
+                print(f"preço: {produtos[id_p]['preco']}")
+                print('----------------------------')
     
     def ver_produto(self):
         id_p = input("Informe o id do produto que deseja ver: ")
@@ -396,12 +398,15 @@ class Ecommerce:
         self.listar_categorias()
         id_c = input("Informe o id da categoria: ")
         produtos = NProduto().listar()
-        p_por_c = [produto for produto in produtos if produtos[produto]['categoria_id'] == id_c]
-        for prod in p_por_c:
-            print(f"id: {prod}")
-            print(f"descrição: {prod['descrição']}")
-            print(f"estoque: {prod['estoque']}")
-            print(f"preço: {prod['preco']}")
+        if len(produtos) == 0:
+            print("Sem produtos cadastrados.")
+        else:
+            p_por_c = [produto for produto in produtos if produtos[produto]['categoria_id'] == id_c]
+            for prod in p_por_c:
+                print(f"id: {prod}")
+                print(f"descrição: {prod['descrição']}")
+                print(f"estoque: {prod['estoque']}")
+                print(f"preço: {prod['preco']}")
 
     def criar_produto(self):
         d = input("Descrição: ")
@@ -479,11 +484,6 @@ class Ecommerce:
         else:
             print(F"MENSAGEM DE PRODUTO: {pedido}")
     
-    def atualizar_pedido_items(self):
-        pass
-    
-    def remover_pedido_items(self):
-        pass
     
     def ver_pedido_items(self):
         d = input("Informe o id do pedido: ")
@@ -497,9 +497,6 @@ class Ecommerce:
                 # Produto: {p['descricao']} - Quantidade: {items[i]['quantidade']} Preço total: {items[i]['preco_total']}
                 """)
        
-    
-    def listar_pedido_items(self):
-        pass
     
     def listar_usuarios(self):
         usuarios = NUsuarios().listar()
@@ -539,10 +536,11 @@ class Ecommerce:
         if len(user) > 0:
             u = NUsuario().ver_usuario(user[0])
             for client in clientes:  
-                        
-                if int(client) == int(u['data']['id']):
+                print(client, int(u['data']['id']))       
+                if int(clientes[client]['usuario']) == int(u['data']['id']):
+                    print(client)  
                     if email == u['data']['email'] and senha == u['data']['senha']:
-                        self.grava_arquivo(u['data']['id'],u['data']['is_admin'],int(client))
+                        self.grava_arquivo(u['data']['id'],u['data']['is_admin'],int(clientes[client]['usuario']))
                         self.usuario_logado = True
                         print("""
                         

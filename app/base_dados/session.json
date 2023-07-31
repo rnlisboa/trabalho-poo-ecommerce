@@ -1,5 +1,5 @@
 {
-    "id": 3,
-    "is_admin": false,
-    "client": "1"
+    "id": 1,
+    "is_admin": true,
+    "client": 1
 }

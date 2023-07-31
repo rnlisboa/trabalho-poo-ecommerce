@@ -535,21 +535,22 @@ class Ecommerce:
         usuarios = NUsuario().listar()
         clientes = NCliente().listar()
         user = [u for u in usuarios if usuarios[u]['email'] == email]
-         
+        
         if len(user) > 0:
             u = NUsuario().ver_usuario(user[0])
-            client = [c for c in clientes if clientes[c]['usuario'] == u['data']['id']]
-           
-            if email == u['data']['email'] and senha == u['data']['senha']:
-                self.grava_arquivo(u['data']['id'],u['data']['is_admin'],client[0])
-                self.usuario_logado = True
-                print("""
-                
-                LOGIN REALIZADO COM SUCESSO!
-                
-                """)
-            else:
-                print("Dados inválidos.")
+            for client in clientes:  
+                        
+                if int(client) == int(u['data']['id']):
+                    if email == u['data']['email'] and senha == u['data']['senha']:
+                        self.grava_arquivo(u['data']['id'],u['data']['is_admin'],int(client))
+                        self.usuario_logado = True
+                        print("""
+                        
+                        LOGIN REALIZADO COM SUCESSO!
+                        
+                        """)
+                    else:
+                        print("Dados inválidos.")
     def is_logged(self):
         session = self.ler_arquivo('session.json')
         if 'id' in session.keys() and session['id'] != '':

@@ -486,15 +486,17 @@ class Ecommerce:
         pass
     
     def ver_pedido_items(self):
-        d = int(input("Informe o id do pedido: "))
+        d = input("Informe o id do pedido: ")
         items = NPedidoItem().listar()
-        meus = [item for item in items if items[item]['pedido_id'] == d]
-        print(meus)
-        for m in meus:
-            p = NProduto().ver(m)
-            print(f"""
-            Produto: {p['descricao']} - Quantidade: {meus[p]['quantidade']} Preço total: {meus[p]['preco_total']}
-            """)
+        for i in items:
+            
+            if i == d:
+                p = NProduto().ver(i)
+                print(f"""
+                
+                # Produto: {p['descricao']} - Quantidade: {items[i]['quantidade']} Preço total: {items[i]['preco_total']}
+                """)
+       
     
     def listar_pedido_items(self):
         pass

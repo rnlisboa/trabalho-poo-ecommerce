@@ -534,9 +534,9 @@ class Ecommerce:
         if len(user) > 0:
             u = NUsuario().ver_usuario(user[0])
             for client in clientes:  
-                print(client, int(u['data']['id']))       
+               
                 if int(clientes[client]['usuario']) == int(u['data']['id']):
-                    print(client)  
+                    
                     if email == u['data']['email'] and senha == u['data']['senha']:
                         self.grava_arquivo(u['data']['id'],u['data']['is_admin'],int(clientes[client]['usuario']))
                         self.usuario_logado = True

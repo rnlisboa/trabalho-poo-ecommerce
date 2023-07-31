@@ -458,8 +458,6 @@ class Ecommerce:
         p = NPedido().excluir(id)
         print(p)
     
-    def criar_pedido(self):
-        pass
     
     def realizar_compra(self):
         id = input("Informe o id: ")

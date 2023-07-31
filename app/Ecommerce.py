@@ -402,12 +402,15 @@ class Ecommerce:
             print("Sem produtos cadastrados.")
         else:
             p_por_c = [produto for produto in produtos if produtos[produto]['categoria_id'] == id_c]
+            
             for prod in p_por_c:
-                print(f"id: {prod}")
-                print(f"descrição: {prod['descrição']}")
-                print(f"estoque: {prod['estoque']}")
-                print(f"preço: {prod['preco']}")
-
+                p =  NProduto().ver(prod)
+                print()
+                print(f"id: {p['id']}")
+                print(f"descrição: {p['descricao']}")
+                print(f"estoque: {p['estoque']}")
+                print(f"preço: {p['preco']}")
+                print()
     def criar_produto(self):
         d = input("Descrição: ")
         e = int(input("Estoque: "))

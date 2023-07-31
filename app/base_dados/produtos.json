@@ -1,0 +1,9 @@
+{
+    "1": {
+        "id": 1,
+        "descricao": "bola",
+        "estoque": 45,
+        "preco": 190.0,
+        "categoria_id": "1"
+    }
+}
